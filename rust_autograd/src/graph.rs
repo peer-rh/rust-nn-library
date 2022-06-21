@@ -1,35 +1,60 @@
-use std::collections::HashMap;
+use std::{
+    collections::{HashMap, HashSet},
+    hash::Hash,
+};
 
 use crate::node::generate_deriv_nodes;
 
 use super::{Idx, Operation, Session};
+
+static mut total_calls: usize = 0;
 
 pub struct Graph {
     nodes: Vec<Idx>,
     out_nodes: Vec<Idx>,
 }
 
-fn _dfs(idx: &Idx, nodes: &mut Vec<Idx>, session: &Session) {
+// NOTE: This call takes long and isn't necessary as Index is automaticlly sorted
+fn _dfs(idx: &Idx, nodes: &mut HashSet<Idx>, session: &Session) {
+    unsafe {
+        total_calls += 1;
+        println!("dfs: {}", total_calls);
+    }
+    //     if !nodes.contains(idx) {
+    //         println!("Not Contained");
+    //         let node = session.get_node(idx);
+    //         // get children
+    //         let children = node.get_input_nodes();
+    //         if let Some(children) = children {
+    //             for child in children {
+    //                 _dfs(&child, nodes, session)
+    //             }
+    //         }
+    //         nodes.push(*idx)
+    //     }
+    let children = session.get_node(idx).get_input_nodes();
     if !nodes.contains(idx) {
-        let node = session.get_node(idx);
-        // get children
-        let children = node.get_input_nodes();
-        for child in children {
-            _dfs(&child, nodes, session)
+        nodes.insert(*idx);
+        if let Some(children) = children {
+            for child in children {
+                _dfs(&child, nodes, session);
+            }
         }
-
-        nodes.push(*idx)
     }
 }
 
 impl Graph {
     pub fn construct(out_nodes: Vec<Idx>, session: &Session) -> Self {
-        let mut nodes: Vec<Idx> = Vec::new();
+        let mut nodes: HashSet<Idx> = HashSet::new();
 
         for out in out_nodes.iter() {
+            // NOTE: Not necessary
             // _dfs makes this automatically sorted
             _dfs(out, &mut nodes, session);
         }
+
+        let mut nodes: Vec<Idx> = nodes.iter().cloned().collect();
+        nodes.sort();
 
         Graph { nodes, out_nodes }
     }

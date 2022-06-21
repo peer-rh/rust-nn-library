@@ -49,11 +49,11 @@ impl Operation {
         }
     }
 
-    pub fn get_input_nodes(&self) -> Vec<Idx> {
+    pub fn get_input_nodes(&self) -> Option<Vec<Idx>> {
         match self {
-            Self::Sum(a, b) | Self::Multiply(a, b) => vec![*a, *b],
-            Self::Negative(a) | Self::Exponential(a) | Self::Ln(a) => vec![*a],
-            _ => vec![],
+            Self::Sum(a, b) | Self::Multiply(a, b) => Some(vec![*a, *b]),
+            Self::Negative(a) | Self::Exponential(a) | Self::Ln(a) => Some(vec![*a]),
+            _ => None,
         }
     }
 }

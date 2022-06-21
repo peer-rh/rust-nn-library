@@ -22,7 +22,7 @@ impl Node {
         out
     }
 
-    pub fn get_input_nodes(&self) -> Vec<Idx> {
+    pub fn get_input_nodes(&self) -> Option<Vec<Idx>> {
         self.operation.get_input_nodes()
     }
 
