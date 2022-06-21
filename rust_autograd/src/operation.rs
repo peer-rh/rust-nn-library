@@ -117,7 +117,8 @@ impl Session {
 
 #[cfg(test)]
 mod tests {
-    use crate::base::{Graph, Session};
+
+    use crate::{Session, Graph};
 
     macro_rules! test_2_var {
         (

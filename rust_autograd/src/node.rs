@@ -30,13 +30,10 @@ impl Node {
         self.operation
     }
 
-    #[cfg(feature = "verbose")]
     fn conditional_debug(&self, out: f32) {
-        println!("{:?} | {:?}: {}", self.idx, self.operation, out);
+        // TODO: Find way to easily define way to define if it should print
+        // println!("{:?} | {:?}: {}", self.idx, self.operation, out);
     }
-
-    #[cfg(not(feature = "verbose"))]
-    fn conditional_debug(&self, _out: f32) {}
 }
 
 // NOTE: This function is seperate to Node, as this avoids a borrowing problem

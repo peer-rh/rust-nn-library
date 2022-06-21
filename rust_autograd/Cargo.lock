@@ -3,12 +3,5 @@
 version = 3
 
 [[package]]
-name = "nn-library"
-version = "0.1.0"
-dependencies = [
- "rust_autograd",
-]
-
-[[package]]
 name = "rust_autograd"
 version = "0.1.0"

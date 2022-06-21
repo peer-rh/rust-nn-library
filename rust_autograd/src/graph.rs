@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::base::node::generate_deriv_nodes;
+use crate::node::generate_deriv_nodes;
 
 use super::{Idx, Operation, Session};
 
