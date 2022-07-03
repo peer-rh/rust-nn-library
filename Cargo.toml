@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 rust_autograd = { path = "./rust_autograd"}
+rand = "0.8.5"
 
 

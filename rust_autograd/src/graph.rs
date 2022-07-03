@@ -7,7 +7,8 @@ use crate::node::generate_deriv_nodes;
 
 use super::{Idx, Operation, Session};
 
-static mut total_calls: usize = 0;
+// static mut total_calls: usize = 0;
+// static mut total_not_contained: usize = 0;
 
 pub struct Graph {
     nodes: Vec<Idx>,
@@ -15,31 +16,33 @@ pub struct Graph {
 }
 
 // NOTE: This call takes long and isn't necessary as Index is automaticlly sorted
+//
 fn _dfs(idx: &Idx, nodes: &mut HashSet<Idx>, session: &Session) {
-    unsafe {
-        total_calls += 1;
-        println!("dfs: {}", total_calls);
-    }
-    //     if !nodes.contains(idx) {
-    //         println!("Not Contained");
-    //         let node = session.get_node(idx);
-    //         // get children
-    //         let children = node.get_input_nodes();
-    //         if let Some(children) = children {
-    //             for child in children {
-    //                 _dfs(&child, nodes, session)
-    //             }
-    //         }
-    //         nodes.push(*idx)
-    //     }
+    // Options to Optimize this step
+    // - Make the Values Tensors
+    // - Enable Shared Inputs (Cuts out on duplicate checks)
+    // - Leave as is, as end goal doesn't use Tensors
+    // unsafe {
+    //     total_calls += 1;
+    //     println!(
+    //         "dfs: {}/{}, nodes_len: {}",
+    //         total_not_contained,
+    //         total_calls,
+    //         nodes.len()
+    //     );
+    // }
+    //
     let children = session.get_node(idx).get_input_nodes();
     if !nodes.contains(idx) {
-        nodes.insert(*idx);
+        // unsafe {
+        //     total_not_contained += 1;
+        // }
         if let Some(children) = children {
             for child in children {
                 _dfs(&child, nodes, session);
             }
         }
+        nodes.insert(*idx);
     }
 }
 
@@ -101,5 +104,9 @@ impl Graph {
             Graph::construct(deriv_nodes.values().cloned().collect(), session),
             deriv_nodes,
         )
+    }
+
+    pub fn get_n_nodes(&self) -> usize {
+        self.nodes.len()
     }
 }
